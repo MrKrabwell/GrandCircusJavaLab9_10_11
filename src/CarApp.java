@@ -2,90 +2,11 @@
  * Class for CarApp, as described in Grand Circus Java (Jan 2017) Lab Number 9
  * Created by yosuk on 2/9/2017.
  */
-
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CarApp {
 
     static Scanner scnr = new Scanner(System.in);      // Scanner object for user input
-
-    /****************************************************************
-     * getValidInteger function to validate that it is an int value *
-     ****************************************************************/
-    private static int getValidInteger() {
-
-        // This keeps looping until integer input is received.
-        while (!scnr.hasNextInt()) {
-            scnr.nextLine();         // clear the buffer
-            System.out.print("Please enter an integer! ");
-        }
-
-        int integerNum = scnr.nextInt();
-        scnr.nextLine();
-
-        return integerNum;
-    }
-
-
-    /*************************************************************************
-     * getValidInteger to and check for a range, user with getValidInteger() *
-     *************************************************************************/
-    private static int getValidInteger(int min) {
-
-        int userInput = getValidInteger();
-
-        while (userInput < min) {
-            System.out.printf("Please enter a number greater than %d!\n");
-            userInput = getValidInteger();
-        }
-
-        return userInput;
-    }
-
-
-    /*************************************************************************
-     * getValidInteger to and check for a range, user with getValidInteger() *
-     *************************************************************************/
-    private static int getValidInteger(int min, int max) {
-
-        int userInput = getValidInteger();
-
-        while (userInput < min || userInput > max) {
-            System.out.printf("Please enter a number within %d and %d!", min, max);
-            userInput = getValidInteger();
-        }
-
-        return userInput;
-    }
-
-    /*************************************************************************
-     * This method asks the user yes or no
-     *************************************************************************/
-    private static boolean askUserYesNo() {
-        // Variable declarations
-        String userInput = "";                  // User input string
-
-        // Get user input
-        userInput = scnr.nextLine();
-        System.out.println("");
-
-        // Validate whether user input is ok, and continue asking until right
-        while (!userInput.equalsIgnoreCase("y") &&
-                !userInput.equalsIgnoreCase("yes") &&
-                !userInput.equalsIgnoreCase("n") &&
-                !userInput.equalsIgnoreCase("no")) {
-            System.out.print("That is not a valid input.  Please try again. (y/n): ");
-            userInput = scnr.nextLine();
-        }
-
-        // Return true if user says yes, and false if user says no
-        if (userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("yes")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     /**
      * This is the main program
@@ -109,8 +30,15 @@ public class CarApp {
             System.out.println("(1) Add cars to inventory");
             System.out.println("(2) Display the entire inventory");
             System.out.println("(3) Buy a car");
-            System.out.print("Please enter your choice (1-3): " );
-            functionChoice = getValidInteger(1,3);
+            System.out.println("(4) View all cars of a specific make");
+            System.out.println("(5) View all cars of a specific year");
+            System.out.println("(6) View all cars of an entered price or less");
+            System.out.println("(7) View only new cars");
+            System.out.println("(8) View only used cars");
+            System.out.println("(9) Replace a car or edit car info");
+            System.out.println("(10) Find car based on index number");
+            System.out.print("Please enter your choice (1-10): " );
+            functionChoice = InputValidator.getValidInteger(1,10);
             System.out.println();
 
             // Execute function
@@ -122,7 +50,33 @@ public class CarApp {
                     carLot1.printEntireInventory();
                     break;
                 case 3:
-                    carLot1.printEntireInventory();
+                    carLot1.buyCarInInventory();
+                    break;
+                case 4:
+                    carLot1.viewSpecificMakeInInventory(CarLot.getUserMake(-1));  // negative for generic prompt
+                    break;
+                case 5:
+                    carLot1.viewSpecificYearInInventory(CarLot.getUserYear(-1));  // negative for generic prompt
+                    break;
+                case 6:
+                    carLot1.viewPriceOrLessInInventory(CarLot.getUserPrice(-1));  // negative for generic prompt
+                    break;
+                case 7:
+                    carLot1.viewNewCarsInInventory();
+                    break;
+                case 8:
+                    carLot1.viewUsedCarsInInventory();
+                    break;
+                case 9:
+                    System.out.print("Enter car index number: ");
+                    carLot1.editCarInfoInInventory
+                            (InputValidator.getValidInteger(1,carLot1.getNumCarsInInventory())-1);
+                    break;
+                case 10:
+                    // TODO: need to finish
+                    System.out.print("Enter car index number: ");
+                    carLot1.printSingleCar(InputValidator.getValidInteger(0)-1);
+                    break;
                 default:
                     break;
             }
@@ -130,8 +84,7 @@ public class CarApp {
 
             // Ask the user if they want to continue, if no, exit loop
             System.out.print("Would you like to continue? (y/n) ");
-            if (!askUserYesNo()) {
-                System.out.println();
+            if (!InputValidator.askUserYesNo()) {
                 break;
             }
             System.out.println();

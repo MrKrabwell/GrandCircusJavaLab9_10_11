@@ -20,6 +20,11 @@ public class UsedCar extends Car {
         this.mileage = mileage;
     }
 
+    // Setter
+    public void setMileage(double mileage) {
+        this.mileage = mileage;
+    }
+
     /**
      * Overriden toString() method to return a labeled and formatted string of the data members
      * mileage is the new data member available in this subclass
